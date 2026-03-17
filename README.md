@@ -46,6 +46,7 @@ Run the application:
 Bash
 python app.py
 Open http://127.0.0.1:5000 in your browser.
+https://stockshield.streamlit.app/
 
 📈 Future Roadmap
 [ ] Sentiment Analysis: Integrating Twitter/X and News API to gauge market mood.
