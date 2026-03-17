@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Shield Analysis | {{ data.symbol }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { background: #05070a; color: white; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-panel { background: rgba(13, 17, 23, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); }
+        .stat-card { border-left: 4px solid transparent; transition: 0.3s; }
+        .stat-card:hover { border-left-color: #3b82f6; background: rgba(255,255,255,0.02); }
+        .glow-border-green { border-top: 4px solid #10b981; box-shadow: 0 -10px 20px -10px rgba(16, 185, 129, 0.3); }
+        .glow-border-red { border-top: 4px solid #ef4444; box-shadow: 0 -10px 20px -10px rgba(239, 68, 68, 0.3); }
+        .glow-border-blue { border-top: 4px solid #3b82f6; box-shadow: 0 -10px 20px -10px rgba(59, 130, 246, 0.3); }
+    </style>
+</head>
+<body class="p-6 md:p-12">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+            <div>
+                <nav class="flex space-x-2 text-xs text-gray-500 mb-2 uppercase tracking-widest font-bold">
+                    <a href="/" class="hover:text-blue-500">Dashboard</a>
+                    <span>/</span>
+                    <span class="text-gray-300">Market Intelligence</span>
+                </nav>
+                <h1 class="text-5xl font-black tracking-tighter">{{ data.symbol }} <span class="text-blue-500 font-light ml-2 underline underline-offset-8">Insight</span></h1>
+            </div>
+            <div class="glass-panel p-6 rounded-3xl flex items-center space-x-6">
+                <div class="text-right">
+                    <p class="text-gray-500 text-xs font-bold uppercase">Live Valuation</p>
+                    <p class="text-3xl font-mono font-bold text-white">${{ data.price }}</p>
+                </div>
+                <div class="h-10 w-[1px] bg-gray-800"></div>
+                <div class="w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-400">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <a href="/" class="text-xs bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-xl transition font-bold">BACK</a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 glass-panel rounded-[2rem] p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-gray-400 uppercase text-sm tracking-widest">Market Performance (Last 30 Days)</h3>
+                    <div class="flex space-x-2">
+                        <div class="h-2 w-8 rounded-full bg-blue-600"></div>
+                    </div>
+                </div>
+                <div id="chart" class="h-[400px]"></div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="glass-panel p-8 rounded-[2rem] stat-card shadow-xl">
+                    <p class="text-gray-500 text-xs font-bold uppercase mb-4 tracking-widest">AI Trend Forecast</p>
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-4xl font-black {{ 'text-green-400' if data.trend == 'UP' else 'text-red-400' }}">
+                            {{ data.trend }}
+                        </h2>
+                        <i class="fas {{ 'fa-circle-chevron-up text-green-500' if data.trend == 'UP' else 'fa-circle-chevron-down text-red-500' }} text-5xl"></i>
+                    </div>
+                    <p class="text-gray-400 text-sm mt-4">Random Forest classifier identifies <span class="text-white font-bold">{{ data.trend }}</span> momentum for the upcoming session.</p>
+                </div>
+
+                <div class="glass-panel p-8 rounded-[2rem] stat-card shadow-xl">
+                    <p class="text-gray-500 text-xs font-bold uppercase mb-4 tracking-widest">Safety Analysis</p>
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-4xl font-black {{ 'text-red-400' if data.risk == 'HIGH' else 'text-emerald-400' }}">
+                            {{ data.risk }}
+                        </h2>
+                        <i class="fas {{ 'fa-triangle-exclamation text-red-500' if data.risk == 'HIGH' else 'fa-shield-check text-emerald-500' }} text-5xl"></i>
+                    </div>
+                    <p class="text-gray-400 text-sm mt-4 italic">Volatility metrics indicate <span class="text-white font-bold">{{ data.risk }}</span> capital risk based on recent fluctuations.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-12">
+            <h3 class="text-xl font-extrabold mb-8 flex items-center tracking-tight">
+                <span class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3 text-sm">
+                    <i class="fas fa-clock"></i>
+                </span>
+                TEMPORAL INTELLIGENCE DASHBOARD
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-panel p-8 rounded-[2rem] {{ 'glow-border-green' if data.analysis.seven_day.trend == 'UP' else 'glow-border-red' }}">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-gray-500 text-xs font-bold uppercase tracking-widest">Short-Term (7D)</span>
+                        <span class="text-xs font-mono {{ 'text-green-400' if data.analysis.seven_day.trend == 'UP' else 'text-red-400' }} bg-white/5 px-2 py-1 rounded">
+                            {{ data.analysis.seven_day.change }}%
+                        </span>
+                    </div>
+                    <h4 class="text-3xl font-black mb-2">{{ data.analysis.seven_day.trend }}</h4>
+                    <p class="text-gray-500 text-xs leading-relaxed">Analyzing weekly momentum via price delta calculations.</p>
+                </div>
+
+                <div class="glass-panel p-8 rounded-[2rem] {{ 'glow-border-green' if data.analysis.fifteen_day.trend == 'UP' else 'glow-border-red' }}">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-gray-500 text-xs font-bold uppercase tracking-widest">Mid-Term (15D)</span>
+                        <span class="text-xs font-mono {{ 'text-green-400' if data.analysis.fifteen_day.trend == 'UP' else 'text-red-400' }} bg-white/5 px-2 py-1 rounded">
+                            {{ data.analysis.fifteen_day.change }}%
+                        </span>
+                    </div>
+                    <h4 class="text-3xl font-black mb-2">{{ data.analysis.fifteen_day.trend }}</h4>
+                    <p class="text-gray-500 text-xs leading-relaxed">Structural trend analysis using a 15-day observation window.</p>
+                </div>
+
+                <div class="glass-panel p-8 rounded-[2rem] glow-border-blue bg-blue-500/5">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-blue-400 text-xs font-bold uppercase tracking-widest">AI Projection (Next 3D)</span>
+                        <i class="fas fa-robot text-blue-500"></i>
+                    </div>
+                    <h4 class="text-2xl font-black text-white mb-2">{{ data.analysis.next_three.trend }}</h4>
+                    <p class="text-gray-400 text-xs leading-relaxed italic">Machine Learning probabilistic outcome based on historical patterns.</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="mt-16 pt-8 border-t border-gray-900 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-600 text-xs font-bold uppercase tracking-widest">
+            <p>2026 StockShield All Rights Reserved</p>
+            <div class="flex items-center space-x-4">
+                <span class="flex items-center"><span class="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span> Engine: Active</span>
+                <span class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span> Data: Real-time</span>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        var trace = {
+            x: {{ data.dates|tojson }},
+            y: {{ data.history|tojson }},
+            type: 'scatter',
+            mode: 'lines',
+            fill: 'tozeroy',
+            fillcolor: 'rgba(59, 130, 246, 0.08)',
+            line: { color: '#3b82f6', width: 4, shape: 'spline' }
+        };
+        var layout = {
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            font: { family: 'Plus Jakarta Sans', color: '#64748b' },
+            margin: { t: 10, b: 40, l: 40, r: 10 },
+            xaxis: { gridcolor: '#1e293b', zeroline: false },
+            yaxis: { gridcolor: '#1e293b', zeroline: false }
+        };
+        Plotly.newPlot('chart', [trace], layout, {responsive: true, displayModeBar: false});
+    </script>
+</body>
+</html>

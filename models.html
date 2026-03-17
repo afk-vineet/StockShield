@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ML Engine | Stock Shield</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #05070a; color: white; }
+        .code-box { background: #010204; border: 1px solid #1e293b; font-family: 'Courier New', monospace; }
+    </style>
+</head>
+<body class="p-10">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-black mb-6">ML ARCHITECTURE</h1>
+        
+        <div class="grid grid-cols-3 gap-4 mb-10">
+            <div class="bg-blue-900/20 p-6 rounded-2xl border border-blue-500/30">
+                <p class="text-xs text-blue-400 font-bold uppercase">Accuracy</p>
+                <h2 class="text-3xl font-black">{{ stats.accuracy }}</h2>
+            </div>
+            </div>
+
+        <div class="code-box p-8 rounded-3xl">
+            <h3 class="text-emerald-400 mb-4 font-bold">// Random Forest Classifier Logic</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">
+                Our model utilizes 100 decision trees. It processes historical volatility and price-action to find the "Optimal Split" for trend classification. Unlike Linear models, it handles non-linear market noise effectively.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

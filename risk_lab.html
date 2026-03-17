@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Risk Lab | Stock Shield</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="p-10 bg-[#05070a] text-white">
+    <div class="max-w-xl mx-auto bg-white/5 p-10 rounded-[3rem] border border-white/10">
+        <h2 class="text-3xl font-black mb-8 text-center text-red-500">STRESS TEST SIMULATOR</h2>
+        <div class="space-y-6">
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Investment Amount (INR)</label>
+                <input id="amt" type="number" placeholder="50000" class="w-full bg-black/50 border border-gray-800 p-4 rounded-2xl">
+            </div>
+            <button onclick="runTest()" class="w-full bg-red-600 p-4 rounded-2xl font-black uppercase tracking-widest hover:bg-red-500 transition">Execute Crash Simulation</button>
+            <div id="result" class="mt-8 text-center hidden">
+                <p class="text-gray-400">Potential loss in 10% Market Crash:</p>
+                <h3 id="lossAmt" class="text-4xl font-black text-red-400"></h3>
+            </div>
+        </div>
+    </div>
+    <script>
+        function runTest() {
+            const amt = document.getElementById('amt').value;
+            if(amt) {
+                document.getElementById('result').classList.remove('hidden');
+                document.getElementById('lossAmt').innerText = "₹" + (amt * 0.10).toFixed(2);
+            }
+        }
+    </script>
+</body>
+</html>
