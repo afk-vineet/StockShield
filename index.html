@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Shield | AI Financial Security</title>
+    <title>Stock Shield | Multi-Asset Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -26,162 +26,202 @@
             background: rgba(255, 255, 255, 0.07);
             border-color: rgba(59, 130, 246, 0.5);
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .market-btn {
+            padding: 8px 20px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .market-btn.active {
+            background: #2563eb;
+            color: white;
+            border-color: #3b82f6;
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
         }
         .glow-text { text-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
-        .search-glow:focus-within { box-shadow: 0 0 25px rgba(59, 130, 246, 0.3); }
-        
-        /* Blinking Animation */
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0.3; }
-            100% { opacity: 1; }
-        }
         .blink-dot {
-            width: 8px;
-            height: 8px;
+            width: 8px; height: 8px;
             background-color: #10b981;
             border-radius: 50%;
             display: inline-block;
             animation: blink 1.5s infinite;
             box-shadow: 0 0 8px #10b981;
         }
-
-        /* Smooth fade-in animation */
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         .fade-up { animation: fadeUp 0.8s ease-out forwards; }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="min-h-screen">
 
     <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto sticky top-0 z-50 backdrop-blur-md">
         <div class="flex items-center space-x-2">
-            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
                 <i class="fas fa-shield-halved text-white"></i>
             </div>
             <span class="text-xl font-extrabold tracking-tight uppercase">Stock<span class="text-blue-500">Shield</span></span>
         </div>
-        <div class="hidden md:flex space-x-8 text-sm font-semibold text-gray-400">
-            <a href="#market-section" class="hover:text-white transition">Market</a>
-            <a href="#ml-section" class="hover:text-white transition">ML Models</a>
+        <div class="hidden md:flex space-x-8 text-[10px] font-black uppercase tracking-widest text-gray-500">
+            <a href="#market-section" class="hover:text-white transition">Multi-Market</a>
+            <a href="#ml-section" class="hover:text-white transition">AI Engine</a>
             <a href="#risk-section" class="hover:text-white transition">Risk Lab</a>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-6 pt-20 pb-12">
-        <div class="text-center mb-16 fade-up">
-            <span class="px-4 py-2 rounded-full bg-blue-500/10 text-blue-400 text-xs font-bold uppercase tracking-widest border border-blue-500/20">
-                AI-POWERED FINANCIAL SECURITY
+    <main class="max-w-7xl mx-auto px-6 pt-16 pb-12">
+        <div class="text-center mb-12 fade-up">
+            <span class="px-4 py-2 rounded-full bg-blue-500/10 text-blue-400 text-[10px] font-black uppercase tracking-[0.2em] border border-blue-500/20">
+                Universal Asset Intelligence
             </span>
             <h1 class="text-6xl md:text-8xl font-black mt-6 tracking-tighter leading-tight">
-                Predict the Market. <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 glow-text">Manage the Risk.</span>
+                Predict Markets. <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 glow-text">Secure Capital.</span>
             </h1>
-            <p class="text-gray-400 mt-8 text-lg max-w-2xl mx-auto">
-                An advanced <b>Decision Support System</b> using Random Forest Classifiers to protect retail investors from extreme market volatility.
-            </p>
         </div>
 
-        <div class="max-w-2xl mx-auto mb-32 fade-up" style="animation-delay: 0.2s">
-            <div class="glass-card search-glow p-2 rounded-3xl flex items-center">
-                <i class="fas fa-search ml-6 text-gray-500"></i>
-                <input id="stockInput" type="text" placeholder="Enter Symbol (e.g., GOOGL, RELIANCE.BSE, AAPL)" 
-                       class="bg-transparent border-none focus:ring-0 w-full p-4 text-white text-lg font-medium placeholder:text-gray-600">
-                <button onclick="searchStock()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 py-4 rounded-2xl transition-all shadow-lg shadow-blue-600/20">
-                    Analyze Now
-                </button>
+        <div class="max-w-3xl mx-auto mb-32 fade-up" style="animation-delay: 0.2s">
+            <div class="flex justify-center space-x-3 mb-6">
+                <button type="button" onclick="switchMarket('STOCKS')" id="btn-stocks" class="market-btn active">STOCKS</button>
+                <button type="button" onclick="switchMarket('CRYPTO')" id="btn-crypto" class="market-btn bg-white/5 text-gray-500">CRYPTO</button>
+                <button type="button" onclick="switchMarket('FOREX')" id="btn-forex" class="market-btn bg-white/5 text-gray-500">FOREX</button>
+                <button type="button" onclick="switchMarket('COMMODITY')" id="btn-commodity" class="market-btn bg-white/5 text-gray-500">COMMODITIES</button>
             </div>
+
+            <form action="/search" method="POST" class="glass-card p-2 rounded-[2.5rem] flex items-center shadow-2xl">
+                <input type="hidden" name="market_type" id="market-type-input" value="STOCKS">
+                
+                <div class="w-14 h-14 bg-blue-600/10 rounded-full flex items-center justify-center ml-2 text-blue-500">
+                    <i id="market-icon" class="fas fa-chart-line"></i>
+                </div>
+                
+                <input name="symbol" id="stockInput" type="text" placeholder="Enter Stock Symbol (e.g., RELIANCE.NS)" required
+                       class="bg-transparent border-none focus:ring-0 w-full p-4 text-white text-lg font-bold placeholder:text-gray-600">
+                
+                <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-black px-10 py-4 rounded-[1.8rem] transition-all tracking-widest text-xs">
+                    ANALYZE
+                </button>
+            </form>
+            <p id="helper-text" class="text-center text-[10px] text-gray-500 mt-4 font-bold tracking-widest uppercase">Select market type for optimized neural processing</p>
         </div>
 
         <section id="market-section" class="mb-32 fade-up">
             <div class="flex items-center justify-between mb-8">
-                <h3 class="text-2xl font-bold uppercase tracking-widest text-gray-400 text-sm">Market Intelligence</h3>
-                <div class="h-[1px] flex-grow mx-8 bg-gray-800"></div>
+                <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
+                    Market Pulse: <span id="active-market-label" class="text-blue-500">STOCKS</span>
+                </h3>
+                <div class="h-[1px] flex-grow mx-8 bg-gray-800/50"></div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
-                {% for symbol in stocks %}
-                <a href="/predict/{{symbol}}" class="glass-card p-8 rounded-3xl group">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="w-12 h-12 bg-gray-800 rounded-2xl flex items-center justify-center group-hover:bg-blue-600 transition-colors">
-                            <i class="fas fa-chart-line text-blue-400 group-hover:text-white"></i>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <span class="blink-dot"></span>
-                            <span class="text-xs font-bold text-emerald-400 tracking-widest">ACTIVE</span>
-                        </div>
+
+            <div id="market-grid-container">
+                {% for category, assets in market_data.items() %}
+                <div id="grid-{{ category }}" class="market-grid-group {% if category != 'STOCKS' %}hidden{% endif %}">
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
+                        {% for asset in assets %}
+                        <a href="/predict/{{ asset.symbol }}?market={{ category }}" 
+                           class="glass-card p-8 rounded-3xl text-center block group hover:border-blue-500/50 transition-all duration-300">
+                            <div class="flex justify-center mb-4">
+                                {% if category == 'CRYPTO' %}
+                                    <i class="fab fa-bitcoin text-orange-400"></i>
+                                {% elif category == 'FOREX' %}
+                                    <i class="fas fa-landmark text-emerald-400"></i>
+                                {% elif category == 'COMMODITY' %}
+                                    <i class="fas fa-gem text-amber-400"></i>
+                                {% else %}
+                                    <span class="blink-dot"></span>
+                                {% endif %}
+                            </div>
+                            <h4 class="text-xl font-black group-hover:text-blue-400 transition">{{ asset.name }}</h4>
+                            <p class="text-[9px] text-gray-500 font-bold uppercase mt-2 tracking-widest">{{ asset.symbol }}</p>
+                        </a>
+                        {% endfor %}
                     </div>
-                    <h4 class="text-2xl font-black tracking-tight">{{ symbol }}</h4>
-                    <p class="text-gray-500 text-xs mt-2 group-hover:text-gray-300 font-bold uppercase tracking-tight">Run AI Analysis →</p>
-                </a>
+                </div>
                 {% endfor %}
             </div>
         </section>
 
         <section id="ml-section" class="mb-32">
-            <div class="glass-card p-12 rounded-[3rem] border-blue-500/20">
-                <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="glass-card p-12 rounded-[3.5rem]">
+                <div class="grid md:grid-cols-2 gap-16 items-center">
                     <div>
-                        <h2 class="text-4xl font-black mb-6 uppercase tracking-tighter">The <span class="text-blue-500">ML Engine</span></h2>
-                        <p class="text-gray-400 leading-relaxed mb-6">
-                            Our system utilizes an <b>Ensemble Random Forest Classifier</b>. By training on 100+ days of historical OHLC data, the model identifies non-linear patterns that standard technical indicators miss.
+                        <span class="text-blue-500 text-[10px] font-black tracking-widest uppercase">Core Engine</span>
+                        <h2 class="text-5xl font-black mt-2 mb-6 tracking-tighter uppercase">Universal <span class="text-blue-500">Ensemble</span></h2>
+                        <p class="text-gray-400 leading-relaxed mb-8 text-sm">
+                            Our AI uses a **Random Forest Classification** system that is asset-agnostic. By normalizing volatility across Stocks, Crypto, and Forex, the model identifies structural momentum regardless of the asset class.
                         </p>
-                        <ul class="space-y-4 text-sm font-bold text-gray-300 uppercase tracking-wide">
-                            <li><i class="fas fa-check-circle text-blue-500 mr-2"></i> 100 Decision Tree Estimators</li>
-                            <li><i class="fas fa-check-circle text-blue-500 mr-2"></i> Real-time Probabilistic Forecast</li>
-                            <li><i class="fas fa-check-circle text-blue-500 mr-2"></i> Automated Feature Engineering</li>
-                        </ul>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-4 bg-white/5 rounded-2xl border border-white/5">
+                                <p class="text-blue-400 font-black text-xl">100+</p>
+                                <p class="text-[9px] text-gray-500 font-bold uppercase">Decision Trees</p>
+                            </div>
+                            <div class="p-4 bg-white/5 rounded-2xl border border-white/5">
+                                <p class="text-emerald-400 font-black text-xl">24/7</p>
+                                <p class="text-[9px] text-gray-500 font-bold uppercase">Neural Training</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-black/40 p-8 rounded-3xl border border-white/5 font-mono text-xs text-blue-400">
-                        <p class="mb-2"># Training Random Forest...</p>
-                        <p class="mb-2">df['Target'] = np.where(df['Close'].shift(-1) > df['Close'], 1, 0)</p>
-                        <p class="mb-2">model = RandomForestClassifier(n_estimators=100)</p>
-                        <p class="mb-2">model.fit(X_train, y_train)</p>
-                        <p class="text-emerald-400 font-bold">>>> Model Accuracy: 84.2%</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="risk-section" class="mb-32">
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="md:col-span-1 glass-card p-8 rounded-[2.5rem] bg-red-500/5 border-red-500/20">
-                    <i class="fas fa-flask text-3xl text-red-500 mb-6"></i>
-                    <h3 class="text-2xl font-black mb-4 uppercase">Risk Lab</h3>
-                    <p class="text-gray-400 text-sm">We calculate volatility using <b>Standard Deviation</b>. If fluctuations exceed 2%, the Shield activates high-alert mode.</p>
-                </div>
-                <div class="md:col-span-2 glass-card p-8 rounded-[2.5rem]">
-                    <h3 class="text-xl font-bold mb-6 flex items-center"><i class="fas fa-bolt text-yellow-400 mr-3"></i> Stress Test Simulator</h3>
-                    <div class="flex flex-col md:flex-row gap-4">
-                        <input id="testAmt" type="number" placeholder="Enter Investment Amount (₹)" class="flex-grow bg-black/50 border border-gray-800 p-4 rounded-2xl focus:ring-2 ring-blue-500 outline-none font-bold">
-                        <button onclick="runStressTest()" class="bg-red-600 hover:bg-red-500 px-10 py-4 rounded-2xl font-black transition uppercase tracking-widest text-sm">Run Crash Test</button>
-                    </div>
-                    <div id="testResult" class="mt-6 p-6 bg-white/5 rounded-2xl hidden text-center border border-white/10">
-                        <p class="text-gray-400 text-xs uppercase font-bold tracking-widest">Estimated Loss in 10% Crash</p>
-                        <h4 id="lossVal" class="text-4xl font-black text-red-500 mt-2"></h4>
+                    <div class="bg-black/60 p-8 rounded-[2rem] border border-white/10 font-mono text-[11px] text-blue-400 shadow-2xl">
+                        <p class="opacity-50">// Multi-Asset Normalization</p>
+                        <p class="mb-2">def process_asset(data, type):</p>
+                        <p class="ml-4 mb-2">scaler = StandardScaler()</p>
+                        <p class="ml-4 mb-2">if type == 'CRYPTO':</p>
+                        <p class="ml-8 mb-2">adjust_volatility_window(high)</p>
+                        <p class="ml-4 mb-2">model.predict(live_stream)</p>
+                        <p class="text-emerald-400 font-bold mt-4">>>> CROSS-MARKET LINK ESTABLISHED</p>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="p-12 border-t border-gray-900 text-center">
-        <p class="text-gray-600 text-xs font-bold tracking-widest uppercase italic">Stock Shield &copy; 2026 | Built for Smart India Hackathon Entry</p>
-    </footer>
-
     <script>
-        function searchStock() {
-            const sym = document.getElementById('stockInput').value.toUpperCase();
-            if(sym) window.location.href = '/predict/' + sym;
-        }
+        function switchMarket(market) {
+            // 1. Update the hidden input value for the form submission
+            document.getElementById('market-type-input').value = market;
 
-        function runStressTest() {
-            const amt = document.getElementById('testAmt').value;
-            if(amt) {
-                document.getElementById('testResult').classList.remove('hidden');
-                document.getElementById('lossVal').innerText = "₹" + (amt * 0.10).toLocaleString();
+            const input = document.getElementById('stockInput');
+            const icon = document.getElementById('market-icon');
+            const btns = document.querySelectorAll('.market-btn');
+            
+            // 2. UI Reset (Buttons)
+            btns.forEach(b => {
+                b.classList.remove('active', 'bg-blue-600', 'text-white');
+                b.classList.add('bg-white/5', 'text-gray-500');
+            });
+
+            // 3. Set Active Button
+            const activeBtn = document.getElementById('btn-' + market.toLowerCase());
+            activeBtn.classList.add('active');
+            activeBtn.classList.remove('bg-white/5', 'text-gray-500');
+
+            // 4. Update Search Bar placeholder/icon
+            const configs = {
+                'STOCKS': { p: "Enter Stock Symbol (e.g., RELIANCE.NS, AAPL)", i: "fa-chart-line" },
+                'CRYPTO': { p: "Enter Crypto Ticker (e.g., BTC, ETH, SOL)", i: "fa-bitcoin" },
+                'FOREX': { p: "Enter Currency Pair (e.g., USDINR, EURUSD)", i: "fa-landmark" },
+                'COMMODITY': { p: "Enter Commodity (e.g., GOLD, SILVER, CRUDEOIL)", i: "fa-gem" }
+            };
+            input.placeholder = configs[market].p;
+            icon.className = "fas " + configs[market].i;
+
+            // 5. REACTIVE GRID FILTERING
+            // Update Pulse Label
+            document.getElementById('active-market-label').innerText = market;
+
+            // Hide all market groups
+            const allGrids = document.querySelectorAll('.market-grid-group');
+            allGrids.forEach(grid => grid.classList.add('hidden'));
+            
+            // Show only the selected category grid
+            const selectedGrid = document.getElementById('grid-' + market);
+            if(selectedGrid) {
+                selectedGrid.classList.remove('hidden');
+                // Add quick animation
+                selectedGrid.classList.add('fade-up');
             }
         }
     </script>
