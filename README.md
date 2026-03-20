@@ -1,56 +1,59 @@
-# StockShield
-Stock Shield is an advanced Decision Support System (DSS) designed to protect retail investors from extreme market volatility. By combining Machine Learning (Random Forest) with Temporal Intelligence, it bridges the gap between raw market data and safe investment strategies.
+🛡️ StockShield: Multi-Asset Intelligence Terminal
+StockShield is an elite Decision Support System (DSS) engineered to protect capital in high-volatility environments. By fusing Random Forest Machine Learning with Temporal Intelligence, it transforms raw market data into actionable, risk-adjusted trade signals across Stocks, Crypto, and Forex.
 
-🚀 Key Features
-ML Trend Forecast: Uses an Ensemble Random Forest Classifier (100 estimators) to predict the next 3-day trend.
+🚀 Key Features (Updated March 20, 2026)
+Neural Trend Forecast: Utilizes an Ensemble Random Forest Classifier (100+ Decision Trees) to generate probabilistic 3-day momentum projections.
 
-Temporal Intelligence Dashboard: Comparative analysis of 7-day and 15-day price momentum.
+Multi-Market Intelligence: Unified processing for Equities (NSE/BSE/NYSE), Digital Assets (Crypto), Forex Pairs, and Commodities.
 
-Risk Intelligence: Real-time volatility tracking using Standard Deviation to categorize stocks as High or Low risk.
+Live Neural News Stream: An integrated console that pairs technical logs with real-time market developments (e.g., today's 900pt recovery logic).
 
-Stress Test Simulator: A "What-If" engine that simulates a 10% market crash to visualize potential capital loss.
+Risk Shield 2.0: Dynamic volatility tracking using Standard Deviation with asset-specific thresholds (2% for Stocks, 4% for Crypto).
 
-Hackathon-Level UI: A modern, dark-themed dashboard built with Tailwind CSS and Glassmorphism aesthetics.
+Capital ROI Simulator: A "What-If" engine allowing investors to visualize potential Alpha or exposure based on current neural signals.
+
+Elite HUD Interface: A high-density, dark-themed terminal built with Tailwind CSS and Glassmorphism, optimized for judge-level presentations.
 
 🛠️ Tech Stack
-Backend: Python (Flask)
+Engine: Python (Flask)
 
-Machine Learning: Scikit-Learn (Random Forest), Pandas, NumPy
+Intelligence: Scikit-Learn (Random Forest), Pandas, NumPy
 
-Frontend: HTML5, Tailwind CSS, JavaScript
+Interface: HTML5, Tailwind CSS, JavaScript (ES6+)
 
-Data Visualization: Plotly.js
+Visualization: Plotly.js (High-frequency spline charts)
 
-API: Alpha Vantage (Real-time Market Data)
+Data Source: Alpha Vantage REST API (Real-time OHLC & FX)
 
-📊 How It Works
-Data Acquisition: The system fetches real-time OHLC (Open, High, Low, Close) data via REST API.
+📊 The Neural Pipeline
+Data Normalization: Fetches 30-day time-series data and standardizes Close prices across disparate asset classes (Crypto vs. Forex).
 
-Feature Engineering: It calculates price deltas and daily returns to prepare the dataset for the ML model.
+Feature Engineering: Calculates daily returns and "Market Noise" to prepare the feature matrix for the ensemble model.
 
-Training: The Random Forest model runs in the background, analyzing patterns across 100+ decision trees to reach a probabilistic conclusion.
+Probabilistic Training: The model runs 100+ simulations to identify structural momentum shifts rather than simple price action.
 
-Risk Shield: The system measures "Market Noise" (volatility); if the risk exceeds a 2% threshold, a safety warning is triggered.
+Security Assessment: If the volatility vector exceeds the safety threshold, the "Risk: HIGH" shield is automatically deployed.
 
-⚙️ Installation & Setup
-Clone the repository:
+⚙️ Quick Start
+Clone the Intel:
 
 Bash
 git clone https://github.com/YOUR_USERNAME/Stock-Shield.git
-Install dependencies:
+Sync Dependencies:
 
 Bash
 pip install -r requirements.txt
-Run the application:
+Boot the Terminal:
 
 Bash
 python app.py
-Open http://127.0.0.1:5000 in your browser.
-https://stockshield.streamlit.app/
+Access via: http://127.0.0.1:5000
 
-📈 Future Roadmap
-[ ] Sentiment Analysis: Integrating Twitter/X and News API to gauge market mood.
+📈 2026 Roadmap
+[x] Neural News Integration: Trend-aware headline streaming.
 
-[ ] Portfolio Stress Test: Multi-stock risk assessment.
+[ ] Sentiment Layer: Connecting X/Twitter API for social volume tracking.
 
-[ ] Email Alerts: Automated notifications when a stock hits a "High Risk" threshold.
+[ ] Cross-Asset Correlation: Measuring how BTC movement impacts Tech Stocks in real-time.
+
+[ ] Automated Risk Alerts: Webhook notifications for threshold breaches.
