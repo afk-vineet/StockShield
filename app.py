@@ -7,10 +7,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    """
-    Home page displaying categorized top 5 assets for Global Market Pulse.
-    """
-    # Organized market data for the frontend grid
+    """Home page displaying categorized top 5 assets."""
     market_data = {
         "STOCKS": [
             {"name": "Reliance", "symbol": "RELIANCE.NS"},
@@ -45,41 +42,41 @@ def home():
 
 @app.route('/predict/<symbol>')
 def predict(symbol):
-    """
-    Direct link route. Captures 'market' from URL params to route API correctly.
-    """
+    """Trading Terminal route with full UI."""
     market_type = request.args.get('market', 'STOCKS')
-    
-    # Run the Random Forest Analysis from model.py
     data = get_analysis(symbol.upper(), market_type)
-    
     if data:
-        # Pass the processed AI data to the results page
         return render_template('result.html', data=data)
-    
-    # If API fails or symbol is invalid, redirect back home
     return redirect(url_for('home'))
+
+@app.route('/risk-lab')
+def risk_lab():
+    """
+    Standalone Neural Risk Lab route. 
+    Crucial: Must return 'risk_lab.html'
+    """
+    symbol = request.args.get('symbol')
+    market = request.args.get('market', 'STOCKS')
+    
+    if symbol:
+        data = get_analysis(symbol.strip().upper(), market)
+        # Verify this file exists in your /templates folder
+        return render_template('risk_lab.html', data=data)
+    
+    return render_template('risk_lab.html', data=None)
 
 @app.route('/search', methods=['POST'])
 def search():
-    """
-    Handles search bar input. Captures the symbol and the hidden market_type input.
-    """
+    """Handles main search bar input."""
     symbol = request.form.get('symbol')
     market = request.form.get('market_type', 'STOCKS') 
-    
     if symbol:
-        # Redirect to predict route with market as a query parameter
         return redirect(url_for('predict', symbol=symbol.strip().upper(), market=market))
-    
     return redirect(url_for('home'))
-
-# --- ERROR HANDLING ---
 
 @app.errorhandler(404)
 def page_not_found(e):
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    # threaded=True allows handling multiple simulation requests at once
     app.run(debug=True, threaded=True)
