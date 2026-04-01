@@ -6,136 +6,204 @@
     <title>Stock Shield | Multi-Asset Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --accent-blue: #2563eb;
+            --accent-cyan: #00F2FF;
+            --bg-dark: #030508; /* Darker, deep midnight base */
+        }
+
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: #05070a;
-            background-image: radial-gradient(at 0% 0%, rgba(29, 78, 216, 0.15) 0, transparent 50%), 
-                              radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.1) 0, transparent 50%);
+            background: var(--bg-dark);
+            /* Darker gradients for a more focused aesthetic */
+            background-image: radial-gradient(at 0% 0%, rgba(29, 78, 216, 0.12) 0, transparent 40%), 
+                              radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.08) 0, transparent 40%);
             color: #f8fafc;
             scroll-behavior: smooth;
+            overflow-x: hidden;
         }
+
+        /* GRAIN OVERLAY FOR TEXTURE */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://grainy-gradients.vercel.app/noise.svg');
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* FLOATING ANIMATIONS */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(8deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .animate-float { animation: float 7s ease-in-out infinite; }
+        .animate-float-slow { animation: float 10s ease-in-out infinite; }
+        .animate-float-delayed { animation: float 9s ease-in-out infinite; animation-delay: 3s; }
+
         .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(10, 15, 25, 0.4); /* Darker glass tint */
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 10;
         }
+
         .glass-card:hover {
-            background: rgba(255, 255, 255, 0.07);
-            border-color: rgba(59, 130, 246, 0.5);
-            transform: translateY(-5px);
+            background: rgba(15, 20, 35, 0.6);
+            border-color: rgba(59, 130, 246, 0.3);
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
+
         .market-btn {
-            padding: 8px 20px;
+            padding: 8px 22px;
             border-radius: 12px;
             font-size: 10px;
             font-weight: 800;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             transition: all 0.3s;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.03);
+            color: #475569;
+            position: relative;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.02);
         }
+
         .market-btn.active {
-            background: #2563eb;
+            background: var(--accent-blue);
             color: white;
             border-color: #3b82f6;
-            box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 0 25px rgba(37, 99, 235, 0.3);
         }
-        .glow-text { text-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+
+        .glow-text { text-shadow: 0 0 30px rgba(59, 130, 246, 0.4); }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
         .blink-dot {
             width: 8px; height: 8px;
             background-color: #10b981;
             border-radius: 50%;
             display: inline-block;
-            animation: blink 1.5s infinite;
-            box-shadow: 0 0 8px #10b981;
+            animation: blink 2s infinite;
+            box-shadow: 0 0 12px #10b981;
         }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        .fade-up { animation: fadeUp 0.8s ease-out forwards; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+        .fade-up { animation: fadeUp 1s ease-out forwards; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="min-h-screen">
 
-    <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto sticky top-0 z-50 backdrop-blur-md">
-        <div class="flex items-center space-x-2">
-            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                <i class="fas fa-shield-halved text-white"></i>
-            </div>
-            <span class="text-xl font-extrabold tracking-tight uppercase">Stock<span class="text-blue-500">Shield</span></span>
+    <div class="fixed inset-0 overflow-hidden pointer-events-none opacity-[0.12] z-0">
+        <div class="absolute top-[12%] left-[8%] animate-float-slow">
+            <i class="fab fa-bitcoin text-6xl text-orange-400"></i>
         </div>
-        <div class="hidden md:flex space-x-8 text-[10px] font-black uppercase tracking-widest text-gray-500">
-            <a href="#market-section" class="hover:text-white transition">Multi-Market</a>
+        <div class="absolute top-[60%] left-[12%] animate-float-delayed">
+            <i class="fas fa-gem text-5xl text-amber-300"></i>
+        </div>
+        <div class="absolute top-[18%] right-[10%] animate-float">
+            <i class="fas fa-chart-line text-6xl text-blue-400"></i>
+        </div>
+        <div class="absolute top-[75%] right-[12%] animate-float-slow">
+            <i class="fab fa-ethereum text-5xl text-indigo-400"></i>
+        </div>
+        <div class="absolute top-[40%] right-[28%] animate-float-delayed">
+            <i class="fas fa-landmark text-4xl text-emerald-400"></i>
+        </div>
+        <div class="absolute top-[45%] left-[30%] animate-float-slow opacity-50">
+            <i class="fas fa-shield-halved text-2xl text-white"></i>
+        </div>
+    </div>
+
+    <nav class="p-8 flex justify-between items-center max-w-7xl mx-auto sticky top-0 z-50 backdrop-blur-xl">
+        <div class="flex items-center space-x-3">
+            <div class="w-11 h-11 bg-blue-600 rounded-xl flex items-center justify-center shadow-2xl">
+                <i class="fas fa-shield-halved text-white text-lg"></i>
+            </div>
+            <span class="text-2xl font-black tracking-tighter uppercase">Stock<span class="text-blue-500">Shield</span></span>
+        </div>
+        <div class="hidden md:flex space-x-10 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
+            <a href="#market-section" class="hover:text-blue-400 transition">Markets</a>
+            <a href="/risk-lab" class="text-cyan-400 hover:text-cyan-300 transition glow-text">Neural Risk Lab</a>
             <a href="#ml-section" class="hover:text-white transition">AI Engine</a>
-            <a href="#risk-section" class="hover:text-white transition">Risk Lab</a>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-6 pt-16 pb-12">
-        <div class="text-center mb-12 fade-up">
-            <span class="px-4 py-2 rounded-full bg-blue-500/10 text-blue-400 text-[10px] font-black uppercase tracking-[0.2em] border border-blue-500/20">
-                Universal Asset Intelligence
+    <main class="max-w-7xl mx-auto px-6 pt-20 pb-12 relative z-10">
+        
+        <div class="text-center mb-16 fade-up">
+            <span class="px-5 py-2 rounded-full bg-blue-500/5 text-blue-400 text-[9px] font-black uppercase tracking-[0.3em] border border-blue-500/10">
+                Institutional Grade Intelligence v4.2
             </span>
-            <h1 class="text-6xl md:text-8xl font-black mt-6 tracking-tighter leading-tight">
+            <h1 class="text-6xl md:text-8xl font-black mt-8 tracking-tighter leading-[0.9] mb-4">
                 Predict Markets. <br>
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 glow-text">Secure Capital.</span>
             </h1>
         </div>
 
-        <div class="max-w-3xl mx-auto mb-32 fade-up" style="animation-delay: 0.2s">
-            <div class="flex justify-center space-x-3 mb-6">
+        <div class="max-w-3xl mx-auto mb-28 fade-up" style="animation-delay: 0.2s">
+            <div class="flex justify-center space-x-3 mb-8">
                 <button type="button" onclick="switchMarket('STOCKS')" id="btn-stocks" class="market-btn active">STOCKS</button>
-                <button type="button" onclick="switchMarket('CRYPTO')" id="btn-crypto" class="market-btn bg-white/5 text-gray-500">CRYPTO</button>
-                <button type="button" onclick="switchMarket('FOREX')" id="btn-forex" class="market-btn bg-white/5 text-gray-500">FOREX</button>
-                <button type="button" onclick="switchMarket('COMMODITY')" id="btn-commodity" class="market-btn bg-white/5 text-gray-500">COMMODITIES</button>
+                <button type="button" onclick="switchMarket('CRYPTO')" id="btn-crypto" class="market-btn">CRYPTO</button>
+                <button type="button" onclick="switchMarket('FOREX')" id="btn-forex" class="market-btn">FOREX</button>
+                <button type="button" onclick="switchMarket('COMMODITY')" id="btn-commodity" class="market-btn">COMMODITIES</button>
             </div>
 
-            <form action="/search" method="POST" class="glass-card p-2 rounded-[2.5rem] flex items-center shadow-2xl">
+            <form action="/search" method="POST" class="glass-card p-2.5 rounded-[2.8rem] flex items-center shadow-[0_0_50px_rgba(0,0,0,0.4)]">
                 <input type="hidden" name="market_type" id="market-type-input" value="STOCKS">
-                
-                <div class="w-14 h-14 bg-blue-600/10 rounded-full flex items-center justify-center ml-2 text-blue-500">
-                    <i id="market-icon" class="fas fa-chart-line"></i>
+                <div class="w-14 h-14 bg-blue-600/10 rounded-full flex items-center justify-center ml-3 text-blue-500">
+                    <i id="market-icon" class="fas fa-chart-line text-xl"></i>
                 </div>
-                
-                <input name="symbol" id="stockInput" type="text" placeholder="Enter Stock Symbol (e.g., RELIANCE.NS)" required
-                       class="bg-transparent border-none focus:ring-0 w-full p-4 text-white text-lg font-bold placeholder:text-gray-600">
-                
-                <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-black px-10 py-4 rounded-[1.8rem] transition-all tracking-widest text-xs">
+                <input name="symbol" id="stockInput" type="text" placeholder="Enter Stock Symbol (e.g., RELIANCE.NS, AAPL)" required
+                       class="bg-transparent border-none focus:ring-0 w-full p-5 text-white text-xl font-bold placeholder:text-gray-700 outline-none">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-black px-12 py-5 rounded-[2rem] transition-all tracking-widest text-xs shadow-lg">
                     ANALYZE
                 </button>
             </form>
-            <p id="helper-text" class="text-center text-[10px] text-gray-500 mt-4 font-bold tracking-widest uppercase">Select market type for optimized neural processing</p>
+
+            <div class="flex flex-col items-center mt-16 space-y-5">
+                <p class="mono text-[10px] text-gray-600 uppercase tracking-[0.4em] opacity-40">Proprietary Stability Scanning</p>
+                <a href="/risk-lab" class="px-12 py-5 glass-card border border-cyan-500/20 rounded-2xl hover:bg-cyan-500/5 transition-all group inline-block">
+                    <span class="flex items-center space-x-4">
+                        <i class="fas fa-flask text-cyan-400 group-hover:rotate-12 transition-transform duration-500"></i>
+                        <span class="font-black text-xs uppercase tracking-[0.2em] text-cyan-400">Launch Neural Risk Lab</span>
+                    </span>
+                </a>
+            </div>
         </div>
 
-        <section id="market-section" class="mb-32 fade-up">
-            <div class="flex items-center justify-between mb-8">
-                <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
-                    Market Pulse: <span id="active-market-label" class="text-blue-500">STOCKS</span>
+        <section id="market-section" class="mb-36 fade-up">
+            <div class="flex items-center justify-between mb-12">
+                <h3 class="text-[10px] font-black uppercase tracking-[0.5em] text-gray-600">
+                    Live Stream: <span id="active-market-label" class="text-blue-500">STOCKS</span>
                 </h3>
-                <div class="h-[1px] flex-grow mx-8 bg-gray-800/50"></div>
+                <div class="h-[1px] flex-grow mx-12 bg-gray-800/30"></div>
             </div>
 
             <div id="market-grid-container">
                 {% for category, assets in market_data.items() %}
                 <div id="grid-{{ category }}" class="market-grid-group {% if category != 'STOCKS' %}hidden{% endif %}">
-                    <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
                         {% for asset in assets %}
                         <a href="/predict/{{ asset.symbol }}?market={{ category }}" 
-                           class="glass-card p-8 rounded-3xl text-center block group hover:border-blue-500/50 transition-all duration-300">
-                            <div class="flex justify-center mb-4">
-                                {% if category == 'CRYPTO' %}
-                                    <i class="fab fa-bitcoin text-orange-400"></i>
-                                {% elif category == 'FOREX' %}
-                                    <i class="fas fa-landmark text-emerald-400"></i>
-                                {% elif category == 'COMMODITY' %}
-                                    <i class="fas fa-gem text-amber-400"></i>
-                                {% else %}
-                                    <span class="blink-dot"></span>
-                                {% endif %}
+                           class="glass-card p-10 rounded-[2.5rem] text-center block group hover:border-blue-500/40">
+                            <div class="flex justify-center mb-6">
+                                {% if category == 'CRYPTO' %}<i class="fab fa-bitcoin text-orange-400 text-2xl"></i>
+                                {% elif category == 'FOREX' %}<i class="fas fa-landmark text-emerald-400 text-2xl"></i>
+                                {% elif category == 'COMMODITY' %}<i class="fas fa-gem text-amber-400 text-2xl"></i>
+                                {% else %}<span class="blink-dot"></span>{% endif %}
                             </div>
-                            <h4 class="text-xl font-black group-hover:text-blue-400 transition">{{ asset.name }}</h4>
-                            <p class="text-[9px] text-gray-500 font-bold uppercase mt-2 tracking-widest">{{ asset.symbol }}</p>
+                            <h4 class="text-xl font-black group-hover:text-blue-400 transition tracking-tighter">{{ asset.name }}</h4>
+                            <p class="text-[10px] text-gray-600 font-bold uppercase mt-3 tracking-widest">{{ asset.symbol }}</p>
                         </a>
                         {% endfor %}
                     </div>
@@ -144,83 +212,65 @@
             </div>
         </section>
 
-        <section id="ml-section" class="mb-32">
-            <div class="glass-card p-12 rounded-[3.5rem]">
-                <div class="grid md:grid-cols-2 gap-16 items-center">
-                    <div>
-                        <span class="text-blue-500 text-[10px] font-black tracking-widest uppercase">Core Engine</span>
-                        <h2 class="text-5xl font-black mt-2 mb-6 tracking-tighter uppercase">Universal <span class="text-blue-500">Ensemble</span></h2>
-                        <p class="text-gray-400 leading-relaxed mb-8 text-sm">
-                            Our AI uses a **Random Forest Classification** system that is asset-agnostic. By normalizing volatility across Stocks, Crypto, and Forex, the model identifies structural momentum regardless of the asset class.
-                        </p>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="p-4 bg-white/5 rounded-2xl border border-white/5">
-                                <p class="text-blue-400 font-black text-xl">100+</p>
-                                <p class="text-[9px] text-gray-500 font-bold uppercase">Decision Trees</p>
-                            </div>
-                            <div class="p-4 bg-white/5 rounded-2xl border border-white/5">
-                                <p class="text-emerald-400 font-black text-xl">24/7</p>
-                                <p class="text-[9px] text-gray-500 font-bold uppercase">Neural Training</p>
-                            </div>
-                        </div>
+        <section id="ml-section" class="mb-40">
+            <div class="grid md:grid-cols-2 gap-10 items-stretch">
+                <div class="glass-card p-14 rounded-[3.5rem] flex flex-col justify-center border-l-4 border-l-blue-600/30">
+                    <span class="text-blue-500 text-[10px] font-black tracking-[0.3em] uppercase mb-5">Neural Architecture</span>
+                    <h2 class="text-5xl font-black mb-8 tracking-tighter leading-tight uppercase">Decision Support <br><span class="text-blue-500">System</span></h2>
+                    <p class="text-gray-500 leading-relaxed mb-10 text-sm font-medium">
+                        Utilizing an Ensemble Random Forest architecture, we eliminate market noise. By processing high-frequency data through 100+ decision pathways, the model identifies the "Truth" in momentum shifts.
+                    </p>
+                    <div class="flex gap-5">
+                        <div class="px-6 py-3 bg-white/5 rounded-xl border border-white/5 mono text-[9px] text-blue-400 uppercase font-bold tracking-widest">100 Trees</div>
+                        <div class="px-6 py-3 bg-white/5 rounded-xl border border-white/5 mono text-[9px] text-emerald-400 uppercase font-bold tracking-widest">v4.2 Stable</div>
                     </div>
-                    <div class="bg-black/60 p-8 rounded-[2rem] border border-white/10 font-mono text-[11px] text-blue-400 shadow-2xl">
-                        <p class="opacity-50">// Multi-Asset Normalization</p>
-                        <p class="mb-2">def process_asset(data, type):</p>
-                        <p class="ml-4 mb-2">scaler = StandardScaler()</p>
-                        <p class="ml-4 mb-2">if type == 'CRYPTO':</p>
-                        <p class="ml-8 mb-2">adjust_volatility_window(high)</p>
-                        <p class="ml-4 mb-2">model.predict(live_stream)</p>
-                        <p class="text-emerald-400 font-bold mt-4">>>> CROSS-MARKET LINK ESTABLISHED</p>
+                </div>
+                
+                <div class="glass-card p-12 rounded-[3.5rem] bg-black/60 flex items-center justify-center border-blue-500/5 overflow-hidden relative">
+                    <div class="mono text-[11px] text-blue-500/50 leading-loose space-y-1 relative z-10">
+                        <p>> Fetching OHLC Daily Stream...</p>
+                        <p>> Standard_Deviation: 0.0421</p>
+                        <p>> Decision_Trees [1-100]... OK</p>
+                        <p class="text-emerald-500/70 font-bold">> Signal: Structural Stability Validated</p>
+                        <p>> Normalizing 30-Day Window...</p>
+                        <p class="text-blue-400 font-bold mt-6 animate-pulse">>>> SYSTEM READY FOR ANALYSIS</p>
                     </div>
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-transparent"></div>
                 </div>
             </div>
         </section>
     </main>
 
+    <footer class="p-20 border-t border-white/5 text-center opacity-30">
+        <p class="mono text-[9px] text-gray-500 tracking-[0.8em] uppercase">StockShield // Universal Alpha Terminal // 2026</p>
+    </footer>
+
     <script>
         function switchMarket(market) {
-            // 1. Update the hidden input value for the form submission
             document.getElementById('market-type-input').value = market;
-
             const input = document.getElementById('stockInput');
             const icon = document.getElementById('market-icon');
             const btns = document.querySelectorAll('.market-btn');
             
-            // 2. UI Reset (Buttons)
-            btns.forEach(b => {
-                b.classList.remove('active', 'bg-blue-600', 'text-white');
-                b.classList.add('bg-white/5', 'text-gray-500');
-            });
-
-            // 3. Set Active Button
+            btns.forEach(b => b.classList.remove('active'));
             const activeBtn = document.getElementById('btn-' + market.toLowerCase());
             activeBtn.classList.add('active');
-            activeBtn.classList.remove('bg-white/5', 'text-gray-500');
 
-            // 4. Update Search Bar placeholder/icon
             const configs = {
                 'STOCKS': { p: "Enter Stock Symbol (e.g., RELIANCE.NS, AAPL)", i: "fa-chart-line" },
                 'CRYPTO': { p: "Enter Crypto Ticker (e.g., BTC, ETH, SOL)", i: "fa-bitcoin" },
                 'FOREX': { p: "Enter Currency Pair (e.g., USDINR, EURUSD)", i: "fa-landmark" },
-                'COMMODITY': { p: "Enter Commodity (e.g., GOLD, SILVER, CRUDEOIL)", i: "fa-gem" }
+                'COMMODITY': { p: "Enter Commodity (e.g., GOLD, SILVER)", i: "fa-gem" }
             };
+            
             input.placeholder = configs[market].p;
-            icon.className = "fas " + configs[market].i;
-
-            // 5. REACTIVE GRID FILTERING
-            // Update Pulse Label
+            icon.className = "fas " + configs[market].i + " text-xl";
             document.getElementById('active-market-label').innerText = market;
 
-            // Hide all market groups
-            const allGrids = document.querySelectorAll('.market-grid-group');
-            allGrids.forEach(grid => grid.classList.add('hidden'));
-            
-            // Show only the selected category grid
+            document.querySelectorAll('.market-grid-group').forEach(grid => grid.classList.add('hidden'));
             const selectedGrid = document.getElementById('grid-' + market);
             if(selectedGrid) {
                 selectedGrid.classList.remove('hidden');
-                // Add quick animation
                 selectedGrid.classList.add('fade-up');
             }
         }
