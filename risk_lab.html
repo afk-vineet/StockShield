@@ -2,32 +2,209 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Risk Lab | Stock Shield</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shield | Neural Risk Lab</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-cyan: #00F2FF;
+            --neon-rose: #FF3D71;
+            --neon-emerald: #10B981;
+            --bg-dark: #020408;
+        }
+
+        body { 
+            background: var(--bg-dark); 
+            color: white; 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: 
+                linear-gradient(to right, rgba(0, 242, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 242, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .glass-panel {
+            background: rgba(13, 17, 23, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        .scan-line {
+            width: 100%;
+            height: 2px;
+            background: var(--neon-cyan);
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0.3;
+            box-shadow: 0 0 15px var(--neon-cyan);
+            animation: scan 3s linear infinite;
+            z-index: 10;
+        }
+
+        @keyframes scan {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
+
+        .status-pill {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 9px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid currentColor;
+        }
+
+        .risk-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 4px solid transparent;
+        }
+
+        .risk-card:hover {
+            transform: scale(1.02);
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
 </head>
-<body class="p-10 bg-[#05070a] text-white">
-    <div class="max-w-xl mx-auto bg-white/5 p-10 rounded-[3rem] border border-white/10">
-        <h2 class="text-3xl font-black mb-8 text-center text-red-500">STRESS TEST SIMULATOR</h2>
-        <div class="space-y-6">
-            <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Investment Amount (INR)</label>
-                <input id="amt" type="number" placeholder="50000" class="w-full bg-black/50 border border-gray-800 p-4 rounded-2xl">
+<body class="min-h-screen flex flex-col items-center justify-center p-6">
+
+    <div class="w-full max-w-6xl relative">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+            <div class="space-y-2">
+                <a href="/" class="mono text-[10px] text-cyan-500/60 hover:text-cyan-400 transition flex items-center gap-2 mb-4">
+                    <i class="fas fa-chevron-left"></i> RETURN_TO_TERMINAL
+                </a>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 flex items-center justify-center border border-cyan-500/40">
+                        <i class="fas fa-microscope text-2xl text-cyan-400"></i>
+                    </div>
+                    <h1 class="text-5xl font-black tracking-tighter uppercase">Neural <span class="text-cyan-400">Risk Lab</span></h1>
+                </div>
             </div>
-            <button onclick="runTest()" class="w-full bg-red-600 p-4 rounded-2xl font-black uppercase tracking-widest hover:bg-red-500 transition">Execute Crash Simulation</button>
-            <div id="result" class="mt-8 text-center hidden">
-                <p class="text-gray-400">Potential loss in 10% Market Crash:</p>
-                <h3 id="lossAmt" class="text-4xl font-black text-red-400"></h3>
+            <div class="text-right mono">
+                <p class="text-[9px] text-gray-600 uppercase tracking-[0.3em] mb-1">Session_Status</p>
+                <span class="status-pill text-emerald-500 bg-emerald-500/10">Connected // Secure</span>
             </div>
         </div>
+
+        <div class="glass-panel rounded-3xl p-2 mb-12 relative overflow-hidden group">
+            <div class="scan-line group-hover:opacity-100 transition-opacity opacity-0"></div>
+            <form action="/risk-lab" method="GET" class="flex flex-col md:flex-row gap-2">
+                <input type="text" name="symbol" placeholder="Search Asset (e.g., BTC, TSLA, USDINR)" 
+                       class="bg-transparent flex-1 px-8 py-5 outline-none mono text-sm uppercase placeholder:text-gray-700" required>
+                <button type="submit" class="bg-cyan-500 hover:bg-cyan-400 text-black font-black px-12 py-5 rounded-2xl transition-all flex items-center justify-center gap-3">
+                    <i class="fas fa-satellite-dish text-sm"></i> RUN BIO-SCAN
+                </button>
+            </form>
+        </div>
+
+        {% if data %}
+            {% if data.error %}
+                <div class="glass-panel p-16 rounded-[3rem] text-center border-rose-500/20">
+                    <i class="fas fa-radiation text-rose-500 text-6xl mb-6"></i>
+                    <h2 class="text-2xl font-black uppercase text-rose-400">{{ data.error }}</h2>
+                    <p class="mono text-xs text-gray-600 mt-2 tracking-widest">ERROR_CODE: SYMBOL_NOT_FOUND</p>
+                </div>
+            {% else %}
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                    
+                    <div class="md:col-span-4 space-y-6">
+                        <div class="glass-panel p-8 rounded-[2.5rem]">
+                            <span class="mono text-[9px] text-gray-500 uppercase tracking-widest">Subject_ID</span>
+                            <h2 class="text-4xl font-black mt-2 mb-4">{{ data.symbol }}</h2>
+                            <hr class="border-white/5 mb-6">
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-[10px] text-gray-500 mono">Stability Score</span>
+                                    <span class="text-sm font-bold text-cyan-400">{{ data.risk_lab.stability_score }}%</span>
+                                </div>
+                                <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                                    <div class="bg-cyan-500 h-full" style="width: {{ data.risk_lab.stability_score }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-panel p-8 rounded-[2.5rem] bg-gradient-to-br from-blue-500/10 to-transparent">
+                            <i class="fas fa-shield-virus text-2xl text-blue-400 mb-4"></i>
+                            <h4 class="text-sm font-black uppercase">Technical Logic</h4>
+                            <p class="text-[10px] text-gray-500 leading-relaxed mt-2 mono">
+                                Risk vectors are calculated using standard deviation variance across 15-day and 7-day rolling windows.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="glass-panel p-10 rounded-[3rem] risk-card {{ 'border-rose-500' if data.risk_lab.velocity_risk == 'HIGH' else 'border-emerald-500' }}">
+                            <div class="flex justify-between items-start mb-10">
+                                <div class="p-4 bg-white/5 rounded-2xl">
+                                    <i class="fas fa-wind text-gray-400"></i>
+                                </div>
+                                <span class="status-pill {{ 'text-rose-500 bg-rose-500/10' if data.risk_lab.velocity_risk == 'HIGH' else 'text-emerald-500 bg-emerald-500/10' }}">
+                                    Factor_01
+                                </span>
+                            </div>
+                            <span class="mono text-[9px] text-gray-600 uppercase tracking-widest">7D Velocity Risk</span>
+                            <h3 class="text-4xl font-black mt-2">{{ data.risk_lab.velocity_risk }}</h3>
+                        </div>
+
+                        <div class="glass-panel p-10 rounded-[3rem] risk-card {{ 'border-rose-500' if data.risk_lab.structural_stability == 'FRAGILE' else 'border-emerald-500' }}">
+                            <div class="flex justify-between items-start mb-10">
+                                <div class="p-4 bg-white/5 rounded-2xl">
+                                    <i class="fas fa-atom text-gray-400"></i>
+                                </div>
+                                <span class="status-pill {{ 'text-rose-500 bg-rose-500/10' if data.risk_lab.structural_stability == 'FRAGILE' else 'text-emerald-500 bg-emerald-500/10' }}">
+                                    Factor_02
+                                </span>
+                            </div>
+                            <span class="mono text-[9px] text-gray-600 uppercase tracking-widest">15D Structural Stability</span>
+                            <h3 class="text-4xl font-black mt-2">{{ data.risk_lab.structural_stability }}</h3>
+                        </div>
+
+                        <div class="md:col-span-2 glass-panel p-12 rounded-[3.5rem] flex flex-col md:flex-row justify-between items-center relative overflow-hidden">
+                            <div class="relative z-10">
+                                <span class="mono text-[9px] text-gray-500 uppercase tracking-widest">Final Conclusion</span>
+                                <h3 class="text-7xl font-black mt-4 {{ 'text-rose-500' if data.risk_lab.safety_signal == 'UNSAFE' else 'text-emerald-500' }} tracking-tighter">
+                                    {{ data.risk_lab.safety_signal }}
+                                </h3>
+                                <p class="text-xs text-gray-600 mt-4 mono uppercase tracking-widest">> Neural verdict verified by RF_Model_v4.2</p>
+                            </div>
+                            <div class="mt-8 md:mt-0 relative z-10">
+                                <div class="w-32 h-32 rounded-full border-4 {{ 'border-rose-500/30' if data.risk_lab.safety_signal == 'UNSAFE' else 'border-emerald-500/30' }} flex items-center justify-center">
+                                    <i class="fas {{ 'fa-exclamation-triangle text-rose-500' if data.risk_lab.safety_signal == 'UNSAFE' else 'fa-check-circle text-emerald-500' }} text-5xl"></i>
+                                </div>
+                            </div>
+                            <div class="absolute right-0 bottom-0 opacity-10 translate-x-1/4 translate-y-1/4">
+                                <i class="fas fa-brain text-[200px]"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="text-center py-24 opacity-20">
+                <div class="relative inline-block">
+                    <i class="fas fa-cog fa-spin text-7xl mb-8"></i>
+                    <i class="fas fa-search absolute inset-0 m-auto text-2xl"></i>
+                </div>
+                <p class="mono text-xs tracking-[0.5em] uppercase">Laboratory_Idle // Awaiting_Target_Sync</p>
+            </div>
+        {% endif %}
+
+        <footer class="mt-20 py-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="mono text-[9px] text-gray-700 tracking-[0.4em] uppercase">StockShield Neural Laboratory // v4.2.0</p>
+            <div class="flex gap-4">
+                <span class="status-pill border-gray-800 text-gray-600">Kernel: 0x821</span>
+                <span class="status-pill border-gray-800 text-gray-600">Safe_Sync: Active</span>
+            </div>
+        </footer>
     </div>
-    <script>
-        function runTest() {
-            const amt = document.getElementById('amt').value;
-            if(amt) {
-                document.getElementById('result').classList.remove('hidden');
-                document.getElementById('lossAmt').innerText = "₹" + (amt * 0.10).toFixed(2);
-            }
-        }
-    </script>
+
 </body>
 </html>
