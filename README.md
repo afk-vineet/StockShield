@@ -1,1 +1,69 @@
-StockShield: Multi-Asset Intelligence Terminal🛡️ Secure Capital. Predict Markets.StockShield is a sophisticated financial intelligence terminal designed to bridge the gap between raw market data and safe investment strategies. Developed as a Mini Project for the II Year B.Tech curriculum at NIET Greater Noida, it utilizes machine learning to filter "market noise" and provide risk-adjusted investment signals.  🚀 Core FeaturesMulti-Asset Analysis: Real-time tracking and prediction for Stocks, Crypto, Forex, and Commodities.  Neural Risk Lab: A dedicated diagnostic suite that calculates stability scores to identify "Flash Crash" vulnerabilities.  AI-Driven Direction: Uses ensemble learning to provide clear "UP" or "DOWN" market signals.  ROI Projection: Interactive tools to estimate potential returns based on current valuation and neural forecasts.  Premium UI: A high-end, minimalist dashboard built for an "Analyze-and-Act" workflow.  🛠️ Technical StackFrontend: HTML5, CSS3, JavaScript.  UI Framework: Tailwind CSS (Luxury Tech Aesthetic).  Backend: Python Flask.  Intelligence: Scikit-Learn (Random Forest), Pandas, NumPy.  Data Engine: Alpha Vantage Financial API.  Visualization: Plotly.js for dynamic candlestick and momentum charts.  🧠 MethodologyThe system operates on a five-stage pipeline:Ingestion: Fetches real-time OHLC data via Alpha Vantage.  Processing: Pandas structures raw data and calculates technical indicators like moving averages.  Neural Voting: Scikit-Learn ensemble methods analyze patterns to predict direction.  Risk Shielding: The Neural Risk Lab performs variance checks to determine capital stability.  Visualization: Flask pushes the final "Neural Verdict" to the terminal UI.  📊 Impact & BenefitsEmotional Shield: Reduces trading losses caused by panic or emotional bias.  Democratized Access: Provides institutional-grade analysis tools to the general public for free.  Financial Literacy: Helps users understand risk vectors and market structural stability.  🚧 Current LimitationsDependent on Alpha Vantage API rate limits and stability.  Requires an active internet connection for real-time synchronization.  Does not currently incorporate social sentiment or news trends.  
+Terminal
+🛡️ StockShield — Neural Market Intelligence Terminal
+AI-powered trading analysis platform with real-time market data, ML-driven trend prediction, and a Neural Risk Lab for multi-asset risk profiling.
+
+✨ Features
+Multi-Asset Support — Analyze Stocks, Crypto, Forex, and Commodities from a single interface
+ML Trend Prediction — Random Forest Classifier trained on price action and volatility features
+Neural Risk Lab — Standalone risk profiler with 3 computed safety factors: 7-Day Velocity Risk, 15-Day Structural Stability, and a Final Neural Safety Signal (SAFE / UNSAFE)
+Live Market Data — Powered by the Alpha Vantage API
+Candlestick Charts — 30-day OHLC visualization with SMA overlay
+Context-Aware News Feed — Sentiment-matched headlines based on detected trend
+Demo Fallback — Mock data mode activates automatically when API limits are hit
+🖥️ Tech Stack
+Layer	Technology
+Backend	Python, Flask
+ML Engine	scikit-learn (RandomForestClassifier)
+Data	pandas, NumPy
+Market Data	Alpha Vantage REST API
+Frontend	Jinja2, Tailwind CSS, Font Awesome
+Deployment	Gunicorn
+🚀 Getting Started
+1. Clone the repository
+
+bash
+git clone https://github.com/your-username/stockshield.git
+cd stockshield
+2. Install dependencies
+
+bash
+pip install -r requirements.txt
+3. Add your API key — Open model.py and replace the placeholder:
+
+python
+API_KEY = 'YOUR_API_KEY_HERE'
+Get a free key at alphavantage.co
+
+4. Run the app
+
+bash
+python app.py
+Visit http://localhost:5000 in your browser.
+
+📁 Project Structure
+stockshield/
+├── app.py              # Flask routes & application entry point
+├── model.py            # Data fetching, feature engineering & ML logic
+├── requirements.txt    # Python dependencies
+└── templates/
+    ├── index.html      # Home dashboard with market categories
+    ├── result.html     # Trading terminal with charts & prediction
+    ├── risk_lab.html   # Neural Risk Lab standalone page
+    ├── market.html     # Global market index view
+    └── models.html     # ML architecture info page
+🔬 How the ML Model Works
+Data — Daily OHLC price data is fetched from Alpha Vantage
+Features — Closing price and daily percentage returns are used as inputs
+Target — Binary label: 1 if next day's close is higher, 0 otherwise
+Model — A RandomForestClassifier with 100 estimators is trained on the full available history
+Prediction — The model predicts the next-day trend: UP or DOWN
+⚗️ Neural Risk Lab
+The Risk Lab independently scores an asset across three factors:
+
+Factor	Method	Output
+7D Velocity Risk	Absolute % price change over 7 days (threshold: 12%)	STABLE / HIGH
+15D Structural Stability	Rolling std dev of daily returns over 15 days (threshold: 0.035)	SOLID / FRAGILE
+Safety Signal	UNSAFE if either factor above triggers	SAFE / UNSAFE
+⚠️ Disclaimer
+StockShield is a research and educational tool. All predictions are generated by a statistical model and do not constitute financial advice. Do not make investment decisions based solely on this tool's output.
+
